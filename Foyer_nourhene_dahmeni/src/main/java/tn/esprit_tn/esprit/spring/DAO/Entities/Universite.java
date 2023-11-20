@@ -5,28 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.List;
-import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Chambre {
-
-
+public class Universite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "identifiantChambre")
-    private long idChambre;
-    private long numeroChambre;
-    private TypeChambre typeC;
+    @Column(name = "identifiantUniversite")
+    private long idUniversite;
 
-    @ManyToOne
-    Bloc bloc;
+    private String nomUniversite;
+    private String adresse;
 
-
-    @OneToMany
-    List<Reservation> reservations;
+    @OneToOne
+    private Foyer foyer;
 
 }
