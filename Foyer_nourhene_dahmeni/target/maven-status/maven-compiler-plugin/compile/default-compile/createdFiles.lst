@@ -1,0 +1,14 @@
+tn\esprit_tn\esprit\spring\DAO\Entities\Foyer.class
+tn\esprit_tn\esprit\spring\DAO\Entities\Bloc.class
+tn\esprit_tn\esprit\spring\DAO\Entities\Universite.class
+tn\esprit_tn\esprit\spring\DAO\Repositories\BlocRepository.class
+tn\esprit_tn\esprit\spring\FoyerNourheneDahmeniApplication.class
+tn\esprit_tn\esprit\spring\DAO\Entities\Reservation.class
+tn\esprit_tn\esprit\spring\DAO\Entities\Etudiant.class
+tn\esprit_tn\esprit\spring\DAO\Repositories\ChambreRepository.class
+tn\esprit_tn\esprit\spring\DAO\Repositories\EtudiantRepository.class
+tn\esprit_tn\esprit\spring\DAO\Entities\Chambre.class
+tn\esprit_tn\esprit\spring\DAO\Entities\TypeChambre.class
+tn\esprit_tn\esprit\spring\DAO\Repositories\ReservationRepository.class
+tn\esprit_tn\esprit\spring\DAO\Repositories\UniversiteRepository.class
+tn\esprit_tn\esprit\spring\DAO\Repositories\FoyerRepository.class
