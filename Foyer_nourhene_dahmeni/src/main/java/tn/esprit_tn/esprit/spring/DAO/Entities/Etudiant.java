@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 public class Etudiant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

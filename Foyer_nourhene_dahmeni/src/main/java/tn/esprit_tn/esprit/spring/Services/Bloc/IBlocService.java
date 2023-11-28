@@ -6,9 +6,22 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IBlocService {
-    List<Bloc> getBlocsList();
 
-    public Optional<Bloc> getBlocById(int id);
-    public Bloc createBloc(Bloc bloc);
-    public void deleteBloc(int id);
+    List<Bloc> findAllBlocs();
+
+    Bloc addBloc(Bloc b);
+
+    Bloc findBlocById(long idBloc);
+
+    Bloc updateBloc(Bloc b);
+
+    List<Bloc> updateAllBlocs(List<Bloc> blocs);
+
+    boolean existById(long id);
+
+    void deleteBloc(Bloc b);
+
+    void deleteBlocById(long id);
+
+    List<Bloc> addAllBlocs(List<Bloc> blocs);
 }

@@ -14,28 +14,48 @@ import java.util.Optional;
 public class BlocService implements IBlocService{
 BlocRepository blocRepository;
 
+
+
     @Override
-    public List<Bloc> getBlocsList() {
+    public Bloc addBloc(Bloc b) {
+        return blocRepository.save(b);
+    }
+
+    @Override
+    public List<Bloc> addAllBlocs(List<Bloc> blocs){
+        return blocRepository.saveAll(blocs);
+    }
+    @Override
+    public Bloc updateBloc(Bloc b){
+        return blocRepository.save(b);
+    }
+    @Override
+    public  List<Bloc> updateAllBlocs(List<Bloc> blocs){
+        return blocRepository.saveAll(blocs);
+    }
+    @Override
+    public List<Bloc> findAllBlocs() {
         return blocRepository.findAll();
     }
-
     @Override
-    public Optional<Bloc> getBlocById(int id) {
-        return blocRepository.findById((long) id);
+    public Bloc findBlocById(long id){
+        return blocRepository.findById(id).orElse(Bloc.builder().idBloc(0).nomBloc("Bloc bizarre").build());
+
+    }
+    @Override
+    public boolean existById(long id){
+        return blocRepository.findById(id).isPresent();
     }
 
-    @Override
-    public Bloc createBloc(Bloc bloc) {
-        return blocRepository.save(bloc);
-    }
+   @Override
+   public void deleteBloc(Bloc b){
+        blocRepository.delete(b);
 
+   }
     @Override
-    public void deleteBloc(int id) {
+    public void deleteBlocById(long id) {
+
         blocRepository.deleteById((long) id);
     }
-
-
-
-
 
 }
