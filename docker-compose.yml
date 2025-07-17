@@ -11,6 +11,23 @@ services:
     ports:
       - "3306:3306"
 
+  discovery-service:
+    image: nourhenedahmeni/discovery-service:latest
+    container_name: discovery-service
+    ports:
+      - "8095:8095"
+    environment:
+      SPRING_APPLICATION_NAME: DiscoveryServer
+      SERVER_PORT: 8095
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
+      EUREKA_CLIENT_FETCH_REGISTRY: "false"
+      EUREKA_SERVER_ENABLE_SELF_PRESERVATION: "false"
+      EUREKA_SERVER_PEER_NODE_CONNECT_TIMEOUT_MS: 1
+      EUREKA_SERVER_PEER_NODE_READ_TIMEOUT_MS: 1
+      EUREKA_SERVER_PEER_NODE_TOTAL_CONNECTIONS: 1
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "*"
+      MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS: "always"
+
   foyer-app:
     image: nourhenedahmeni/foyer-app:latest
     depends_on:
