@@ -12,7 +12,7 @@ services:
       - "3306:3306"
 
   foyer-app:
-    image: nourhenedahmeni/foyer-app:${BUILD_NUMBER}
+    image: nourhenedahmeni/foyer-app:latest  # ← ici latest, pas ${BUILD_NUMBER}
     depends_on:
       - mysql
     ports:
