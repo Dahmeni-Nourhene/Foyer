@@ -1,66 +1,78 @@
-version: "3.8"
+version: '3.8'
 
 services:
+
   mysql:
     image: mysql:8
     container_name: mysql
-    restart: always
     environment:
       MYSQL_DATABASE: foyer
       MYSQL_ROOT_PASSWORD: root
     ports:
       - "3306:3306"
+    networks:
+      - foyer-net
 
   discovery-service:
-    image: nourhenedahmeni/discovery-service:latest
+    build: ./DiscoveryServer
     container_name: discovery-service
     ports:
-      - "8095:8095"
+      - "8761:8761"
+    networks:
+      - foyer-net
+
+  api-gateway:
+    build: ./ApiGateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - discovery-service
+    networks:
+      - foyer-net
     environment:
-      SPRING_APPLICATION_NAME: DiscoveryServer
-      SERVER_PORT: 8095
-      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
-      EUREKA_CLIENT_FETCH_REGISTRY: "false"
-      EUREKA_SERVER_ENABLE_SELF_PRESERVATION: "false"
-      EUREKA_SERVER_PEER_NODE_CONNECT_TIMEOUT_MS: 1
-      EUREKA_SERVER_PEER_NODE_READ_TIMEOUT_MS: 1
-      EUREKA_SERVER_PEER_NODE_TOTAL_CONNECTIONS: 1
-      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "*"
-      MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS: "always"
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      - OTEL_SERVICE_NAME=api-gateway
 
   foyer-app:
-    image: nourhenedahmeni/foyer-app:latest
+    build: ./Foyer2425-main
+    container_name: foyer-app
+    ports:
+      - "9090:9090"
     depends_on:
       - mysql
       - discovery-service
-    ports:
-      - "8085:8085"
+    networks:
+      - foyer-net
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/foyer?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8095/eureka/
-      SPRING_APPLICATION_NAME: foyer-app
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/foyer
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      - OTEL_SERVICE_NAME=foyer-app
+
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    container_name: otel-collector
+    volumes:
+      - ./otel-config.yaml:/etc/otel/config.yaml
+    command: ["--config=/etc/otel/config.yaml"]
+    ports:
+      - "4317:4317"  # OTLP gRPC
+      - "4318:4318"  # OTLP HTTP
+    networks:
+      - foyer-net
 
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus
     container_name: prometheus
-    ports:
-      - "9090:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    restart: unless-stopped
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    depends_on:
-      - prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
-      - "3000:3000"
-    volumes:
-      - grafana-storage:/var/lib/grafana
-    restart: unless-stopped
+      - "9091:9090"
+    networks:
+      - foyer-net
 
-volumes:
-  grafana-storage:
+networks:
+  foyer-net:
+    driver: bridge
